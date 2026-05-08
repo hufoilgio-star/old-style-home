@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Dimora Antica — Mobili d'Epoca</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --oro:#b8924a;--verde:#2a6b5e;--verde-scuro:#1a4a40;--verde-medio:#3a8a78;
+  --verde-chiaro:#e6f4f1;--crema:#f5f0e8;--crema-scura:#e8dece;
+  --testo:#1a2e2a;--testo-muted:#5a7a72;--bianco:#fdfaf5;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Cormorant Garamond',serif;background:var(--bianco);color:var(--testo);min-height:100vh}
+
+/* BANNER ADMIN */
+.admin-banner{display:none;background:var(--verde-scuro);color:#a8c8c0;text-align:center;padding:10px 16px;font-size:13px;letter-spacing:1px}
+.admin-banner strong{color:var(--oro)}
+
+/* HEADER */
+header{background:var(--verde-scuro);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px;position:sticky;top:0;z-index:200}
+.logo{display:flex;flex-direction:column;line-height:1;cursor:default;user-select:none}
+.logo-main{font-family:'Playfair Display',serif;font-size:20px;color:var(--oro);letter-spacing:2px}
+.logo-sub{font-size:10px;color:#a8c8c0;letter-spacing:3px;text-transform:uppercase;margin-top:3px}
+.nav-desktop{display:flex;gap:24px;align-items:center}
+.nav-desktop a{color:#a8c8c0;text-decoration:none;font-size:13px;letter-spacing:2px;text-transform:uppercase;transition:color .2s;cursor:pointer}
+.nav-desktop a:hover{color:var(--oro)}
+.nav-cta{border:1px solid var(--oro)!important;padding:7px 18px!important;color:var(--oro)!important}
+.nav-cta:hover{background:var(--oro)!important;color:var(--verde-scuro)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.hamburger span{display:block;width:24px;height:2px;background:#a8c8c0;transition:all .3s;border-radius:2px}
+.hamburger.aperto span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.aperto span:nth-child(2){opacity:0}
+.hamburger.aperto span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.menu-mobile{display:none;position:fixed;top:68px;left:0;right:0;background:var(--verde-scuro);z-index:190;flex-direction:column;padding:8px 0 16px;border-top:1px solid rgba(255,255,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.menu-mobile.aperto{display:flex}
+.menu-mobile a{color:#a8c8c0;text-decoration:none;font-size:15px;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:color .2s,background .2s}
+.menu-mobile a:hover{color:var(--oro);background:rgba(255,255,255,.04)}
+
+/* HERO */
+.hero{background:var(--crema);padding:72px 32px 64px;text-align:center;border-bottom:1px solid var(--crema-scura);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(42,107,94,.04) 30px,rgba(42,107,94,.04) 31px);pointer-events:none}
+.hero-ornament{color:var(--verde);font-size:22px;letter-spacing:6px;margin-bottom:14px;opacity:.6}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,60px);color:var(--verde-scuro);font-weight:400;line-height:1.15;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--verde-medio)}
+.hero p{font-size:clamp(14px,2vw,17px);color:var(--testo-muted);max-width:500px;margin:0 auto 28px;font-weight:300;line-height:1.6}
+.btn-primary{display:inline-block;background:var(--verde-scuro);color:var(--oro);padding:13px 30px;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;font-family:'Cormorant Garamond',serif}
+.btn-primary:hover,.btn-primary:active{background:var(--oro);color:var(--verde-scuro)}
+
+/* CATEGORIE */
+.categorie{display:flex;background:var(--bianco);border-bottom:1px solid var(--crema-scura);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.categorie::-webkit-scrollbar{display:none}
+.cat-btn{padding:13px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--testo-muted);transition:all .2s;white-space:nowrap;flex-shrink:0}
+.cat-btn:hover{color:var(--verde-scuro)}
+.cat-btn.attivo{color:var(--verde-scuro);border-bottom-color:var(--verde);font-weight:500}
+
+/* GRIGLIA */
+.sezione-prodotti{padding:44px 28px;max-width:1400px;margin:0 auto}
+.sezione-titolo{display:flex;align-items:center;gap:16px;margin-bottom:32px}
+.sezione-titolo h2{font-family:'Playfair Display',serif;font-size:24px;font-weight:400;color:var(--verde-scuro);white-space:nowrap}
+.sezione-titolo::after{content:'';flex:1;height:1px;background:var(--crema-scura)}
+.griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+
+/* CARD */
+.card{background:var(--bianco);border:1px solid var(--crema-scura);transition:transform .2s,box-shadow .2s;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(26,74,64,.11)}
+.card-img-wrap{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--crema)}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.card:hover .card-img-wrap img{transform:scale(1.04)}
+.card-badge{position:absolute;top:10px;left:10px;background:var(--verde-scuro);color:var(--oro);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px}
+.foto-overlay{display:none;position:absolute;inset:0;background:rgba(26,74,64,.58);align-items:center;justify-content:center}
+.admin-attivo .foto-overlay{display:flex;opacity:0;transition:opacity .2s}
+.admin-attivo .card-img-wrap:hover .foto-overlay{opacity:1}
+.btn-overlay{background:white;color:var(--verde-scuro);border:none;padding:10px 18px;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Cormorant Garamond',serif;transition:all .15s}
+.btn-overlay:hover,.btn-overlay:active{background:var(--oro)}
+.card-corpo{padding:16px 18px 20px}
+.card-epoca{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--verde-medio);margin-bottom:5px}
+.card-nome{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--verde-scuro);margin-bottom:6px;line-height:1.3}
+.card-desc{font-size:13px;color:var(--testo-muted);line-height:1.5;margin-bottom:10px;font-weight:300}
+.scheda-info{background:var(--verde-chiaro);border-left:3px solid var(--verde);padding:8px 12px;margin-bottom:12px;font-size:12px;color:var(--testo);line-height:1.6;white-space:pre-wrap}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--crema-scura);gap:8px;flex-wrap:wrap}
+.card-prezzo{font-family:'Playfair Display',serif;font-size:19px;color:var(--verde-scuro);flex-shrink:0}
+.card-prezzo span{font-size:11px;color:var(--testo-muted);font-family:'Cormorant Garamond',serif;margin-left:3px}
+.card-btns{display:flex;gap:6px;flex-wrap:wrap}
+.btn-info{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--verde);border:1px solid var(--verde);padding:8px 14px;background:none;cursor:pointer;transition:all .2s;font-family:'Cormorant Garamond',serif}
+.btn-info:hover,.btn-info:active{background:var(--verde);color:white}
+.btn-modifica-card{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--testo-muted);border:1px solid var(--crema-scura);padding:8px 12px;background:none;cursor:pointer;transition:all .2s;font-family:'Cormorant Garamond',serif;display:none}
+.admin-attivo .btn-modifica-card{display:inline-block}
+.btn-modifica-card:hover,.btn-modifica-card:active{border-color:var(--verde);color:var(--verde)}
+
+/* CARD AGGIUNGI */
+.card-aggiungi{border:2px dashed var(--crema-scura);display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;min-height:300px;background:none;padding:32px;text-align:center}
+.admin-attivo .card-aggiungi{display:flex}
+.card-aggiungi:hover,.card-aggiungi:active{border-color:var(--verde);background:rgba(42,107,94,.03)}
+.plus-icon{width:44px;height:44px;border:1.5px solid var(--crema-scura);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:22px;color:var(--testo-muted);transition:all .2s}
+.card-aggiungi:hover .plus-icon{border-color:var(--verde);color:var(--verde)}
+.card-aggiungi p{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--testo-muted)}
+.card-aggiungi:hover p{color:var(--verde)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,74,64,.65);z-index:1000;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.aperto{display:flex}
+.modal{background:var(--bianco);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:4px;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{transform:scale(.97);opacity:.5}to{transform:scale(1);opacity:1}}
+.modal-header{background:var(--verde-scuro);padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--oro);font-weight:400}
+.modal-close{background:none;border:none;color:#a8c8c0;font-size:22px;cursor:pointer;line-height:1;padding:4px 6px}
+.modal-close:hover{color:var(--oro)}
+.modal-corpo{padding:22px 22px 28px}
+.campo{margin-bottom:16px}
+.campo label{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--testo-muted);margin-bottom:6px}
+.campo input,.campo textarea,.campo select{width:100%;border:1px solid var(--crema-scura);background:var(--bianco);padding:11px 13px;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--testo);outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0}
+.campo input:focus,.campo textarea:focus,.campo select:focus{border-color:var(--verde)}
+.campo textarea{min-height:75px;resize:vertical}
+.upload-area{border:2px dashed var(--crema-scura);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-area:hover{border-color:var(--verde);background:rgba(42,107,94,.03)}
+.upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-preview{display:none;width:100%;max-height:160px;object-fit:contain;margin-top:12px}
+.upload-preview.visibile{display:block}
+.upload-testo{font-size:13px;color:var(--testo-muted)}
+.upload-icon{font-size:26px;margin-bottom:8px;color:var(--crema-scura)}
+.modal-footer{display:flex;gap:10px;margin-top:8px}
+.btn-annulla{flex:1;padding:12px;background:none;border:1px solid var(--crema-scura);cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--testo-muted);transition:all .2s}
+.btn-annulla:hover{border-color:var(--verde-scuro);color:var(--verde-scuro)}
+.btn-salva{flex:2;padding:12px;background:var(--verde-scuro);border:none;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--oro);transition:all .2s}
+.btn-salva:hover{background:var(--oro);color:var(--verde-scuro)}
+.btn-elimina{padding:12px 16px;background:none;border:1px solid #e2a0a0;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#b05050;transition:all .2s}
+.btn-elimina:hover{background:#b05050;color:white;border-color:#b05050}
+
+/* DETTAGLIO */
+.modal-det-img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.modal-det-info{padding:20px 22px 26px}
+.modal-det-epoca{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--verde-medio);margin-bottom:6px}
+.modal-det-nome{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,26px);font-weight:400;margin-bottom:10px;color:var(--verde-scuro);line-height:1.2}
+.modal-det-desc{font-size:14px;color:var(--testo-muted);line-height:1.6;margin-bottom:12px;font-weight:300}
+.modal-det-scheda{background:var(--verde-chiaro);border-left:3px solid var(--verde);padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--testo);line-height:1.6;white-space:pre-wrap}
+.modal-det-prezzo{font-family:'Playfair Display',serif;font-size:26px;color:var(--verde-scuro);margin-bottom:18px}
+
+/* FOOTER */
+footer{background:var(--verde-scuro);color:#a8c8c0;padding:48px 28px 32px;margin-top:60px}
+.footer-inner{max-width:1000px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1fr 2fr;gap:48px;margin-bottom:32px}
+.footer-logo{font-family:'Playfair Display',serif;font-size:20px;color:var(--oro);letter-spacing:3px;margin-bottom:8px}
+.footer-tagline{font-size:13px;opacity:.5;line-height:1.6}
+.footer-sep-sm{width:28px;height:1px;background:var(--oro);opacity:.3;margin:12px 0}
+.btn-modifica-contatti{display:none;background:none;border:1px solid rgba(184,146,74,.4);color:var(--oro);padding:8px 16px;font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.admin-attivo .btn-modifica-contatti{display:inline-block}
+.btn-modifica-contatti:hover{background:rgba(184,146,74,.15)}
+.footer-contatti-titolo{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--oro);margin-bottom:14px;opacity:.7}
+.contatti-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.contatto-item{background:rgba(255,255,255,.05);padding:12px 14px;border-left:2px solid var(--verde-medio)}
+.contatto-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--verde-medio);margin-bottom:3px}
+.contatto-valore{font-size:13px;color:#d0e8e4;line-height:1.4}
+.footer-bottom{text-align:center;font-size:12px;opacity:.3;letter-spacing:1px;border-top:1px solid rgba(255,255,255,.07);padding-top:18px}
+
+/* MODAL CONTATTI */
+.contatti-lista{display:flex;flex-direction:column;gap:10px}
+.contatto-row{display:grid;grid-template-columns:1fr 2fr 36px;gap:6px;align-items:center}
+.btn-rm{width:36px;height:36px;background:none;border:1px solid #e2a0a0;color:#b05050;cursor:pointer;font-size:18px;transition:all .2s}
+.btn-rm:hover{background:#b05050;color:white}
+.btn-add-contatto{background:none;border:1px dashed var(--crema-scura);padding:10px;width:100%;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--testo-muted);letter-spacing:1px;margin-top:8px;transition:all .2s}
+.btn-add-contatto:hover{border-color:var(--verde);color:var(--verde)}
+
+/* MODAL CONFERMA ELIMINA */
+.modal-elim-header{background:#7a3030;padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.modal-elim-header h3{font-family:'Playfair Display',serif;font-size:18px;color:#f5c0c0;font-weight:400}
+.btn-conferma-elim{flex:2;padding:12px;background:#8b2e2e;border:none;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#f5c0c0;transition:all .2s}
+.btn-conferma-elim:hover{background:#6b1e1e;color:white}
+
+@media(max-width:600px){
+  header{padding:0 14px;height:60px}
+  .logo-sub{display:none}
+  .nav-desktop{display:none}
+  .hamburger{display:flex}
+  .menu-mobile{top:60px}
+  .hero{padding:48px 16px 40px}
+  .sezione-prodotti{padding:28px 14px}
+  .griglia{grid-template-columns:1fr;gap:16px}
+  .admin-attivo .foto-overlay{display:none!important}
+  .modal-overlay{padding:0;align-items:flex-end}
+  .modal{border-radius:12px 12px 0 0;max-height:95vh}
+  .modal-footer{flex-direction:column}
+  .btn-annulla,.btn-salva,.btn-elimina,.btn-conferma-elim{width:100%;text-align:center;padding:14px}
+  .footer-top{grid-template-columns:1fr;gap:24px}
+  .contatti-grid{grid-template-columns:1fr}
+  .contatto-row{grid-template-columns:1fr;gap:4px}
+  .btn-rm{width:100%;height:36px}
+}
+</style>
+</head>
+<body>
+
+<div class="admin-banner" id="admin-banner">
+  <strong>Modalità Admin attiva</strong> — Gestisci la collezione e i contatti. &nbsp;
+  <span style="text-decoration:underline;cursor:pointer;opacity:.75" onclick="logout()">Esci</span>
+</div>
+
+<header>
+  <div class="logo" id="logo">
+    <span class="logo-main">La Dimora Antica</span>
+    <span class="logo-sub">Mobili d'Epoca dal 1887</span>
+  </div>
+  <nav class="nav-desktop">
+    <a onclick="filtraCategoria('tutti');chiudiMenu()">Collezione</a>
+    <a href="#">Chi Siamo</a>
+    <a href="#">Perizie</a>
+    <a href="#footer-contatti" class="nav-cta">Contatti</a>
+  </nav>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<nav class="menu-mobile" id="menu-mobile">
+  <a onclick="filtraCategoria('tutti');chiudiMenu()">Collezione</a>
+  <a href="#" onclick="chiudiMenu()">Chi Siamo</a>
+  <a href="#" onclick="chiudiMenu()">Perizie</a>
+  <a href="#footer-contatti" onclick="chiudiMenu()">Contatti</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-ornament">— ✦ —</div>
+  <h1>Arte e <em>storia</em><br>in ogni pezzo</h1>
+  <p>Una selezione esclusiva di mobili antichi autentici, selezionati con cura da maestri antiquari.</p>
+  <button class="btn-primary" id="btn-hero-add" style="display:none" onclick="apriModalAggiungi()">+ Aggiungi un Mobile</button>
+</div>
+
+<div class="categorie">
+  <button class="cat-btn attivo" onclick="filtraCategoria('tutti',this)">Tutti</button>
+  <button class="cat-btn" onclick="filtraCategoria('seicento',this)">Seicento</button>
+  <button class="cat-btn" onclick="filtraCategoria('settecento',this)">Settecento</button>
+  <button class="cat-btn" onclick="filtraCategoria('ottocento',this)">Ottocento</button>
+  <button class="cat-btn" onclick="filtraCategoria('novecento',this)">Primo '900</button>
+</div>
+
+<main class="sezione-prodotti">
+  <div class="sezione-titolo"><h2 id="titolo-sezione">La Nostra Collezione</h2></div>
+  <div class="griglia" id="griglia"></div>
+</main>
+
+<footer id="footer-contatti">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">La Dimora Antica</div>
+        <div class="footer-tagline">Antiquariato di qualità.<br>Selezione autentica dal 1887.</div>
+        <div class="footer-sep-sm"></div>
+        <button class="btn-modifica-contatti" onclick="apriModalContatti()">✏ Modifica Contatti</button>
+      </div>
+      <div>
+        <div class="footer-contatti-titolo">Contatti &amp; Informazioni</div>
+        <div class="contatti-grid" id="contatti-grid"></div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 La Dimora Antica. Tutti i diritti riservati.</div>
+  </div>
+</footer>
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <h3>Accesso Admin</h3>
+      <button class="modal-close" onclick="chiudi('modal-login')">✕</button>
+    </div>
+    <div class="modal-corpo">
+      <p style="font-size:14px;color:var(--testo-muted);margin-bottom:20px;line-height:1.5">Inserisci la password per accedere alla modalità amministratore.</p>
+      <div class="campo">
+        <label>Password</label>
+        <input type="password" id="inp-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')verificaLogin()">
+      </div>
+      <div id="login-err" style="color:#b05050;font-size:13px;margin-bottom:10px;display:none">Password errata. Riprova.</div>
+      <div class="modal-footer">
+        <button class="btn-annulla" onclick="chiudi('modal-login')">Annulla</button>
+        <button class="btn-salva" onclick="verificaLogin()">Accedi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGGIUNGI / MODIFICA -->
+<div class="modal-overlay" id="modal-form">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-form-titolo">Aggiungi un Mobile</h3>
+      <button class="modal-close" onclick="chiudi('modal-form')">✕</button>
+    </div>
+    <div class="modal-corpo">
+      <div class="campo">
+        <label>Fotografia</label>
+        <div class="upload-area">
+          <input type="file" accept="image/*" id="inp-img" onchange="anteprima(this)">
+          <div id="upload-ph"><div class="upload-icon">⬆</div><div class="upload-testo">Clicca o trascina un'immagine</div></div>
+          <img id="prev-img" class="upload-preview" src="" alt="">
+        </div>
+      </div>
+      <div class="campo"><label>Nome del Mobile</label><input type="text" id="inp-nome" placeholder="es. Credenza in noce intagliata"></div>
+      <div class="campo">
+        <label>Epoca / Periodo</label>
+        <select id="inp-epoca">
+          <option value="seicento">XVII Secolo (Seicento)</option>
+          <option value="settecento">XVIII Secolo (Settecento)</option>
+          <option value="ottocento">XIX Secolo (Ottocento)</option>
+          <option value="novecento">Primo Novecento</option>
+        </select>
+      </div>
+      <div class="campo"><label>Descrizione breve</label><textarea id="inp-desc" placeholder="Provenienza, materiali, stato di conservazione..."></textarea></div>
+      <div class="campo"><label>Scheda Tecnica / Informazioni</label><textarea id="inp-info" style="min-height:95px" placeholder="Dimensioni: 120×55×90 cm&#10;Legno: Noce massello&#10;Restauri: nessuno"></textarea></div>
+      <div class="campo"><label>Prezzo (€)</label><input type="number" inputmode="numeric" id="inp-prezzo" placeholder="es. 3500"></div>
+      <div class="campo">
+        <label>Etichetta</label>
+        <select id="inp-badge">
+          <option value="">Nessuna</option>
+          <option value="Rarità">Rarità</option>
+          <option value="In evidenza">In evidenza</option>
+          <option value="Venduto">Venduto</option>
+          <option value="Prenotato">Prenotato</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-elimina" id="btn-elim" style="display:none" onclick="chiediElimina()">Elimina</button>
+        <button class="btn-annulla" onclick="chiudi('modal-form')">Annulla</button>
+        <button class="btn-salva" onclick="salvaMobile()">Salva</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFERMA ELIMINA -->
+<div class="modal-overlay" id="modal-conferma">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-elim-header">
+      <h3>Conferma eliminazione</h3>
+      <button class="modal-close" style="color:#f5c0c0" onclick="chiudi('modal-conferma')">✕</button>
+    </div>
+    <div class="modal-corpo">
+      <p style="font-size:16px;line-height:1.6;color:var(--testo);margin-bottom:6px">Sei sicuro di voler eliminare <strong id="nome-da-eliminare"></strong>?</p>
+      <p style="font-size:13px;color:var(--testo-muted);margin-bottom:24px">Questa azione non può essere annullata.</p>
+      <div class="modal-footer">
+        <button class="btn-annulla" onclick="chiudi('modal-conferma')">No, annulla</button>
+        <button class="btn-conferma-elim" onclick="confermElimina()">Sì, elimina</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETTAGLIO -->
+<div class="modal-overlay" id="modal-det">
+  <div class="modal">
+    <div class="modal-header"><h3>Scheda Mobile</h3><button class="modal-close" onclick="chiudi('modal-det')">✕</button></div>
+    <img id="det-img" class="modal-det-img" src="" alt="" style="display:none">
+    <div class="modal-det-info">
+      <div class="modal-det-epoca" id="det-epoca"></div>
+      <div class="modal-det-nome" id="det-nome"></div>
+      <div class="modal-det-desc" id="det-desc"></div>
+      <div class="modal-det-scheda" id="det-scheda" style="display:none"></div>
+      <div class="modal-det-prezzo" id="det-prezzo"></div>
+      <button class="btn-primary" style="width:100%;text-align:center;display:block" onclick="chiudi('modal-det')">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTATTI -->
+<div class="modal-overlay" id="modal-contatti">
+  <div class="modal">
+    <div class="modal-header"><h3>Gestisci Contatti</h3><button class="modal-close" onclick="chiudi('modal-contatti')">✕</button></div>
+    <div class="modal-corpo">
+      <p style="font-size:13px;color:var(--testo-muted);margin-bottom:16px;line-height:1.5">Modifica i contatti nel footer. Usa <strong>|</strong> nel valore per andare a capo.</p>
+      <div class="contatti-lista" id="cont-editor"></div>
+      <button class="btn-add-contatto" onclick="addRigaCont()">+ Aggiungi riga</button>
+      <div class="modal-footer" style="margin-top:18px">
+        <button class="btn-annulla" onclick="chiudi('modal-contatti')">Annulla</button>
+        <button class="btn-salva" onclick="salvaContatti()">Salva</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PW = 'admin1887';
+const EPOCHE = {seicento:'XVII Secolo',settecento:'XVIII Secolo',ottocento:'XIX Secolo',novecento:'Primo Novecento'};
+
+let isAdmin = false, catAttiva = 'tutti', imgNuova = null, editId = null, contattiBozza = [];
+
+let prodotti = [
+  {id:1,nome:'Cassettone Luigi XVI',epoca:'settecento',desc:'Pregiato cassettone intarsiato in legno di rosa, con bronzi dorati. Parigi circa 1780.',info:'Dimensioni: 120×55×90 cm\nLegno: Palissandro con intarsi in legno di rose\nBronzi: Originali dorati a fuoco\nStato: Ottimo — restauro 2019',prezzo:8500,badge:'Rarità',img:null},
+  {id:2,nome:'Scrittoio Napoleonico',epoca:'ottocento',desc:'Scrittoio in mogano Empire con tiretti segreti e piano in pelle verde bordeaux. Primo Ottocento.',info:'Dimensioni: 140×70×80 cm\nLegno: Mogano massello\nPiano: Pelle originale verde bordeaux\nParticolarità: 3 cassetti segreti',prezzo:4200,badge:'In evidenza',img:null},
+  {id:3,nome:'Armadio Barocco Veneziano',epoca:'seicento',desc:'Monumentale armadio a due ante in noce con cornici dorate e intagli floreali. Venezia, fine XVII Secolo.',info:'Dimensioni: 220×60×240 cm\nLegno: Noce massello veneziano\nDecori: Intagli floreali e dorature a foglia',prezzo:14000,badge:'',img:null}
+];
+
+let contatti = [
+  {label:'Indirizzo',valore:'Via della Vigna Nuova, 18 | Firenze (FI)'},
+  {label:'Telefono',valore:'+39 055 123456'},
+  {label:'Email',valore:'info@ladimorantica.it'},
+  {label:'Orari',valore:'Lun–Sab: 10:00–19:00 | Dom: su appuntamento'}
+];
+
+/* ---- ACCESSO SEGRETO: 5 clic sul logo ---- */
+let tapCount = 0, tapTimer = null;
+document.getElementById('logo').addEventListener('click', () => {
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => { tapCount = 0; }, 1800);
+  if (tapCount >= 5) {
+    tapCount = 0;
+    if (isAdmin) { logout(); return; }
+    document.getElementById('inp-pw').value = '';
+    document.getElementById('login-err').style.display = 'none';
+    apri('modal-login');
+    setTimeout(() => document.getElementById('inp-pw').focus(), 150);
+  }
+});
+
+function verificaLogin() {
+  if (document.getElementById('inp-pw').value === ADMIN_PW) {
+    isAdmin = true;
+    chiudi('modal-login');
+    document.body.classList.add('admin-attivo');
+    document.getElementById('admin-banner').style.display = 'block';
+    document.getElementById('btn-hero-add').style.display = 'inline-block';
+    renderGriglia();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('inp-pw').value = '';
+  }
+}
+
+function logout() {
+  isAdmin = false;
+  document.body.classList.remove('admin-attivo');
+  document.getElementById('admin-banner').style.display = 'none';
+  document.getElementById('btn-hero-add').style.display = 'none';
+  renderGriglia();
+}
+
+/* ---- MENU HAMBURGER ---- */
+function toggleMenu() {
+  document.getElementById('hamburger').classList.toggle('aperto');
+  document.getElementById('menu-mobile').classList.toggle('aperto');
+}
+function chiudiMenu() {
+  document.getElementById('hamburger').classList.remove('aperto');
+  document.getElementById('menu-mobile').classList.remove('aperto');
+}
+
+/* ---- GRIGLIA ---- */
+const COLORI = ['#7aada3','#5e9a90','#4a8078','#6bb5a8'];
+
+function renderGriglia() {
+  const g = document.getElementById('griglia');
+  const lista = catAttiva === 'tutti' ? prodotti : prodotti.filter(p => p.epoca === catAttiva);
+  g.innerHTML = '';
+  lista.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    const foto = p.img
+      ? `<img src="${p.img}" alt="${p.nome}">`
+      : `<div style="width:100%;height:100%;background:${COLORI[i%4]};display:flex;align-items:center;justify-content:center"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="6" y="12" width="36" height="28" rx="2" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/><circle cx="18" cy="22" r="4" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/><path d="M6 34 L16 24 L24 32 L30 26 L42 38" stroke="rgba(255,255,255,.5)" stroke-width="1.5" fill="none"/></svg></div>`;
+    div.innerHTML = `
+      <div class="card-img-wrap">
+        ${foto}
+        ${p.badge?`<div class="card-badge">${p.badge}</div>`:''}
+        <div class="foto-overlay"><button class="btn-overlay" onclick="apriModifica(${p.id},event)">📷 Cambia Foto</button></div>
+      </div>
+      <div class="card-corpo">
+        <div class="card-epoca">${EPOCHE[p.epoca]}</div>
+        <div class="card-nome">${p.nome}</div>
+        <div class="card-desc">${p.desc}</div>
+        ${p.info?`<div class="scheda-info">${p.info}</div>`:''}
+        <div class="card-footer">
+          <div class="card-prezzo">€ ${p.prezzo.toLocaleString('it-IT')}<span>trattabile</span></div>
+          <div class="card-btns">
+            <button class="btn-modifica-card" onclick="apriModifica(${p.id})">✏ Modifica</button>
+            <button class="btn-info" onclick="apriDet(${p.id})">Dettagli</button>
+          </div>
+        </div>
+      </div>`;
+    g.appendChild(div);
+  });
+  const add = document.createElement('div');
+  add.className = 'card card-aggiungi';
+  add.onclick = apriModalAggiungi;
+  add.innerHTML = `<div class="plus-icon">+</div><p>Aggiungi un Mobile</p>`;
+  g.appendChild(add);
+}
+
+function filtraCategoria(cat, el) {
+  catAttiva = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('attivo'));
+  if (el) el.classList.add('attivo');
+  const t = {tutti:'La Nostra Collezione',seicento:'Seicento — XVII Sec.',settecento:'Settecento — XVIII Sec.',ottocento:'Ottocento — XIX Sec.',novecento:'Primo Novecento'};
+  document.getElementById('titolo-sezione').textContent = t[cat];
+  renderGriglia();
+}
+
+/* ---- FORM ---- */
+function resetForm() {
+  imgNuova = null; editId = null;
+  ['inp-nome','inp-desc','inp-info','inp-prezzo'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('inp-badge').value = '';
+  document.getElementById('inp-img').value = '';
+  document.getElementById('prev-img').classList.remove('visibile');
+  document.getElementById('upload-ph').style.display = '';
+  document.getElementById('btn-elim').style.display = 'none';
+}
+
+function apriModalAggiungi() {
+  if (!isAdmin) return;
+  resetForm();
+  // nessun selected di default: l'utente sceglie
+  document.getElementById('inp-epoca').value = 'ottocento';
+  document.getElementById('modal-form-titolo').textContent = 'Aggiungi un Mobile';
+  apri('modal-form');
+}
+
+function apriModifica(id, e) {
+  if (e) e.stopPropagation();
+  if (!isAdmin) return;
+  const p = prodotti.find(x => x.id === id);
+  if (!p) return;
+  resetForm();
+  editId = id;
+  document.getElementById('modal-form-titolo').textContent = 'Modifica Mobile';
+  document.getElementById('inp-nome').value = p.nome;
+  document.getElementById('inp-epoca').value = p.epoca;   // ← imposta correttamente l'epoca esistente
+  document.getElementById('inp-desc').value = p.desc;
+  document.getElementById('inp-info').value = p.info || '';
+  document.getElementById('inp-prezzo').value = p.prezzo;
+  document.getElementById('inp-badge').value = p.badge || '';
+  document.getElementById('btn-elim').style.display = 'block';
+  if (p.img) {
+    imgNuova = p.img;
+    document.getElementById('prev-img').src = p.img;
+    document.getElementById('prev-img').classList.add('visibile');
+    document.getElementById('upload-ph').style.display = 'none';
+  }
+  apri('modal-form');
+}
+
+function anteprima(input) {
+  const f = input.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    imgNuova = ev.target.result;
+    document.getElementById('prev-img').src = imgNuova;
+    document.getElementById('prev-img').classList.add('visibile');
+    document.getElementById('upload-ph').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+
+function salvaMobile() {
+  if (!isAdmin) return;
+  const nome = document.getElementById('inp-nome').value.trim();
+  if (!nome) { alert('Inserisci il nome del mobile.'); return; }
+
+  // legge il valore ESATTO del select al momento del salvataggio
+  const sel = document.getElementById('inp-epoca');
+  const epoca = sel.options[sel.selectedIndex].value;
+
+  const dati = {
+    nome, epoca,
+    desc: document.getElementById('inp-desc').value.trim(),
+    info: document.getElementById('inp-info').value.trim(),
+    prezzo: parseInt(document.getElementById('inp-prezzo').value) || 0,
+    badge: document.getElementById('inp-badge').value
+  };
+
+  if (editId) {
+    const idx = prodotti.findIndex(x => x.id === editId);
+    if (idx !== -1) {
+      prodotti[idx] = {...prodotti[idx], ...dati};
+      if (imgNuova) prodotti[idx].img = imgNuova;
+    }
+  } else {
+    prodotti.push({id: Date.now(), ...dati, img: imgNuova});
+  }
+  chiudi('modal-form');
+
+  // se siamo in un filtro specifico e il mobile salvato appartiene a quella categoria, rimaniamo lì
+  // altrimenti torniamo a "tutti" per vedere il nuovo mobile
+  if (catAttiva !== 'tutti' && catAttiva !== epoca) {
+    filtraCategoria('tutti');
+    document.querySelectorAll('.cat-btn')[0].classList.add('attivo');
+  } else {
+    renderGriglia();
+  }
+}
+
+/* ---- ELIMINA ---- */
+function chiediElimina() {
+  if (!isAdmin || !editId) return;
+  const p = prodotti.find(x => x.id === editId);
+  if (!p) return;
+  document.getElementById('nome-da-eliminare').textContent = '"' + p.nome + '"';
+  apri('modal-conferma');
+}
+
+function confermElimina() {
+  prodotti = prodotti.filter(x => x.id !== editId);
+  chiudi('modal-conferma');
+  chiudi('modal-form');
+  renderGriglia();
+}
+
+/* ---- DETTAGLIO ---- */
+function apriDet(id) {
+  const p = prodotti.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('det-epoca').textContent = EPOCHE[p.epoca];
+  document.getElementById('det-nome').textContent = p.nome;
+  document.getElementById('det-desc').textContent = p.desc || '—';
+  const sch = document.getElementById('det-scheda');
+  if (p.info) { sch.textContent = p.info; sch.style.display = 'block'; } else { sch.style.display = 'none'; }
+  document.getElementById('det-prezzo').textContent = `€ ${p.prezzo.toLocaleString('it-IT')}`;
+  const img = document.getElementById('det-img');
+  if (p.img) { img.src = p.img; img.style.display = 'block'; } else { img.style.display = 'none'; }
+  apri('modal-det');
+}
+
+/* ---- CONTATTI ---- */
+function renderContatti() {
+  document.getElementById('contatti-grid').innerHTML = contatti.map(c =>
+    `<div class="contatto-item"><div class="contatto-label">${c.label}</div><div class="contatto-valore">${c.valore.replace(/ \| /g,'<br>')}</div></div>`
+  ).join('');
+}
+
+function apriModalContatti() {
+  if (!isAdmin) return;
+  contattiBozza = contatti.map(c => ({...c}));
+  renderEditorCont();
+  apri('modal-contatti');
+}
+
+function renderEditorCont() {
+  document.getElementById('cont-editor').innerHTML = contattiBozza.map((c,i) => `
+    <div class="contatto-row">
+      <input type="text" value="${c.label}" placeholder="Etichetta" style="font-size:14px;border:1px solid var(--crema-scura);padding:8px 10px;font-family:'Cormorant Garamond',serif;background:var(--bianco)" oninput="contattiBozza[${i}].label=this.value">
+      <input type="text" value="${c.valore}" placeholder="Valore ( | per a capo)" style="font-size:14px;border:1px solid var(--crema-scura);padding:8px 10px;font-family:'Cormorant Garamond',serif;background:var(--bianco)" oninput="contattiBozza[${i}].valore=this.value">
+      <button class="btn-rm" onclick="rmCont(${i})">×</button>
+    </div>`).join('');
+}
+
+function addRigaCont() { contattiBozza.push({label:'',valore:''}); renderEditorCont(); }
+function rmCont(i) { contattiBozza.splice(i,1); renderEditorCont(); }
+function salvaContatti() {
+  contatti = contattiBozza.filter(c => c.label||c.valore).map(c => ({...c}));
+  renderContatti();
+  chiudi('modal-contatti');
+}
+
+/* ---- UTILITY ---- */
+function apri(id) { document.getElementById(id).classList.add('aperto'); }
+function chiudi(id) { document.getElementById(id).classList.remove('aperto'); }
+
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('aperto'); });
+});
+document.addEventListener('click', e => {
+  const menu = document.getElementById('menu-mobile');
+  const ham = document.getElementById('hamburger');
+  if (menu.classList.contains('aperto') && !menu.contains(e.target) && !ham.contains(e.target)) chiudiMenu();
+});
+
+renderGriglia();
+renderContatti();
+</script>
+</body>
+</html>
